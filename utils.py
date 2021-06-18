@@ -2,7 +2,7 @@ MAX_WEIGHT = 400000
 
 
 def parse_csv():
-    with open("sample.csv", 'r') as file:
+    with open("mempool.csv", 'r') as file:
         next(file)
         mempool = {}
         for line in file.readlines():
@@ -46,8 +46,8 @@ def ifValidBlock(mempool, blockTransactions):
             return False
 
         transaction = mempool[tx_id]
-        total_fees += transaction["fees"]
-        total_weight += transaction["weight"]
+        total_fees += int(transaction["fees"])
+        total_weight += int(transaction["weight"])
         if(total_weight > MAX_WEIGHT):
             print("Weight of block exceeds required limit")
             return False
@@ -62,6 +62,6 @@ def ifValidBlock(mempool, blockTransactions):
 
         tx_included[tx_id] = True
 
-    print("Block is correct with transaction fees {} and total weight {}".format(
-        total_fees, total_weight))
+    print("Block is correct with transaction fees {}, total weight {} and numer of transations is {}".format(
+        total_fees, total_weight, len(blockTransactions)))
     return True
