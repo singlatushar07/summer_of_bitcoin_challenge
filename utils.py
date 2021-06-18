@@ -62,6 +62,6 @@ def ifValidBlock(mempool, blockTransactions):
 
         tx_included[tx_id] = True
 
-    print("Block is correct with transaction fees {}, total weight {} and numer of transations is {}".format(
+    print("Block is correct with transaction fees {} satoshis, total weight {} and numer of transations is {}".format(
         total_fees, total_weight, len(blockTransactions)))
     return True
