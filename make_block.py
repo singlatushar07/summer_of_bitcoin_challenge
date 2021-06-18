@@ -30,24 +30,25 @@ for tx in transactions:
     else:
         isValidChild[tx_id] = False
 
-# Greedily creating a block
+# Greedily creating a block of transactions
 total_weight = 0
 total_fees = 0
 block = []
 sorted_transactions = sorted(
-    transactions, key=lambda tx: float(tx["fees"])/float(tx["weight"]), reverse=True)
+    transactions, key=lambda tx: int(tx["weight"])/int(tx["fees"]))
 
 
-for i, tx in enumerate(sorted_transactions):
+def addTx(tx, i):
     tx_id = tx["tx_id"]
     fees = int(tx["fees"])
     weight = int(tx["weight"])
-    parents = tx["parents"]
     if(isAddedInBlock[tx_id]):
-        continue
+        return
+
     if(isValidChild[tx_id]):
+        global total_weight, total_fees
         if(total_weight + weight > MAX_WEIGHT):
-            continue
+            return
         block.append(tx_id)
         total_fees += fees
         total_weight += weight
@@ -64,10 +65,19 @@ for i, tx in enumerate(sorted_transactions):
             if(flag):
                 isValidChild[child_id] = True
 
+        # checking if any of the previous ignored transaction could be added
+        for j, newTx in enumerate(sorted_transactions[:i]):
+            addTx(newTx, j)
+
+
+for i, tx in enumerate(sorted_transactions):
+    addTx(tx, i)
+
 
 with open("block.txt", "w") as file:
     for tx in block:
         file.write(tx+'\n')
 
 block_csv = read_block()
-ifValidBlock(mempool, block_csv)
+if(not ifValidBlock(mempool, block_csv)):
+    print("Algo failed")

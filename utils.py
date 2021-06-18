@@ -1,9 +1,9 @@
-MAX_WEIGHT = 400000
+MAX_WEIGHT = 4000000
 
 
 def parse_csv():
     with open("mempool.csv", 'r') as file:
-        next(file)
+        next(file)      # ignoring first line
         mempool = {}
         for line in file.readlines():
             args = line.strip().split(',')
@@ -57,7 +57,7 @@ def ifValidBlock(mempool, blockTransactions):
             for parent in parents:
                 if(tx_included[parent] == False):
                     print(
-                        "Parent {} fn transaction {} not present in the block".format(parent, tx_id))
+                        "Parent {} of transaction {} not present in the block".format(parent, tx_id))
                     return False
 
         tx_included[tx_id] = True
